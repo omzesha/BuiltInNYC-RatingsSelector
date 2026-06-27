@@ -297,8 +297,8 @@
           height: 10px;
           margin-top: 5px;
           border-radius: 999px;
-          background: #0f9488;
-          box-shadow: 0 0 0 4px rgba(15, 148, 136, 0.2);
+          background: #f8fafc;
+          box-shadow: 0 0 0 4px rgba(248, 250, 252, 0.16);
         }
 
         .ra-toast[data-tone="skip"] .ra-dot {
@@ -328,7 +328,7 @@
 
         .ra-progress {
           height: 2px;
-          background: linear-gradient(90deg, #0f9488, #f59e0b);
+          background: linear-gradient(90deg, #f8fafc, #f59e0b);
           transform-origin: left center;
           opacity: 0.9;
         }

@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta
+      name="description"
+      content="Ratings Adjuster is a Chrome extension that turns broad content ratings into timestamp-level video controls."
+    >
+    <title>Ratings Adjuster</title>
+    <link rel="stylesheet" href="site.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="Ratings Adjuster home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 2.8 19.2 5.6v5.8c0 4.4-2.8 8.2-7.2 9.8-4.4-1.6-7.2-5.4-7.2-9.8V5.6L12 2.8Z"></path>
+            <path d="m8.9 12.1 2 2 4.4-5"></path>
+          </svg>
+        </span>
+        Ratings Adjuster
+      </a>
+      <nav aria-label="Primary navigation">
+        <a href="#how-it-works">How it works</a>
+        <a href="#contribute">Contribute</a>
+        <a class="nav-button" href="https://github.com/omzesha/BuiltInNYC-RatingsSelector">View GitHub</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero-section" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <div class="stack-row" aria-label="Project stack">
+            <span>Chrome Extension</span>
+            <span>YouTube MVP</span>
+            <span>Prepared for Supabase sync</span>
+          </div>
+          <h1 id="hero-title">Turn broad content ratings into timestamp-level control</h1>
+          <p>
+            Ratings Adjuster lets viewers choose the rating and content categories they care about,
+            then mutes or skips only the moments they choose.
+          </p>
+          <div class="hero-actions">
+            <a class="primary-action" href="#install">Install locally</a>
+            <a class="secondary-action" href="https://github.com/omzesha/BuiltInNYC-RatingsSelector">View GitHub</a>
+          </div>
+        </div>
+
+        <div class="product-stage" aria-label="Ratings Adjuster product preview">
+          <div class="browser-frame">
+            <div class="video-surface">
+              <div class="video-shade"></div>
+              <div class="toast-preview">
+                <span class="muted-icon" aria-hidden="true"></span>
+                <div>
+                  <strong>Muted: Profanity</strong>
+                  <p>0:29.5-0:30.5 because it exceeds G.</p>
+                </div>
+              </div>
+              <div class="player-bar">
+                <span></span>
+              </div>
+            </div>
+          </div>
+
+          <aside class="extension-card" aria-label="Extension popup mockup">
+            <div class="extension-head">
+              <span class="mini-mark" aria-hidden="true"></span>
+              <div>
+                <strong>Ratings Adjuster</strong>
+                <small>Local demo database</small>
+              </div>
+            </div>
+            <div class="status-card">
+              <small>Current video</small>
+              <strong>Ratings Adjuster YouTube demo</strong>
+              <p>5 approved segments loaded.</p>
+            </div>
+            <div class="rating-row" aria-label="Selected rating ceiling">
+              <span class="selected">G</span>
+              <span>PG</span>
+              <span>PG-13</span>
+              <span>R</span>
+              <span>NC-17</span>
+            </div>
+            <div class="category-grid">
+              <span>Profanity</span>
+              <span>Violence</span>
+              <span>Nudity</span>
+              <span>Drugs</span>
+            </div>
+            <button type="button">Suggest timestamp</button>
+          </aside>
+        </div>
+      </section>
+
+      <section class="how-section" id="how-it-works" aria-labelledby="how-title">
+        <div class="section-heading">
+          <h2 id="how-title">How it works</h2>
+          <p>Simple enough for today’s demo, structured for a real community/editor workflow.</p>
+        </div>
+        <div class="steps">
+          <article>
+            <span>1</span>
+            <h3>Choose a rating</h3>
+            <p>Set a ceiling such as G, PG, PG-13, R, or NC-17.</p>
+          </article>
+          <article>
+            <span>2</span>
+            <h3>Match approved timestamps</h3>
+            <p>The extension checks editor-approved ranges for the current video URL.</p>
+          </article>
+          <article>
+            <span>3</span>
+            <h3>Mute or skip in the player</h3>
+            <p>Only the selected categories are filtered, with a clear in-player indicator.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="install-section" id="install" aria-labelledby="install-title">
+        <div>
+          <h2 id="install-title">Demo-ready install</h2>
+          <p>
+            Load the repo as an unpacked Chrome extension, open the demo YouTube URL,
+            and seek to the sample timestamps in the local database.
+          </p>
+        </div>
+        <ol>
+          <li>Open <code>chrome://extensions</code></li>
+          <li>Turn on Developer mode</li>
+          <li>Click Load unpacked</li>
+          <li>Select this repository folder</li>
+        </ol>
+      </section>
+
+      <section class="contribute-section" id="contribute" aria-labelledby="contribute-title">
+        <h2 id="contribute-title">Built for Build NYC</h2>
+        <p>
+          The MVP is intentionally small: a reliable extension, a local timestamp database,
+          and a contribution path toward community submissions, editor review, and Supabase sync.
+        </p>
+      </section>
+    </main>
+  </body>
+</html>

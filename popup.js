@@ -17,7 +17,8 @@ const DEFAULT_SETTINGS = {
   selectedRating: "G",
   enabledCategories: Object.fromEntries(CATEGORIES.map((category) => [category.id, true])),
   siteEnabled: {},
-  pausedVideos: {}
+  pausedVideos: {},
+  pendingSubmissions: []
 };
 
 const extensionApi = getExtensionApi();
@@ -42,14 +43,24 @@ const els = {
   siteEnabledToggle: document.getElementById("siteEnabledToggle"),
   pauseVideoButton: document.getElementById("pauseVideoButton"),
   openDemoButton: document.getElementById("openDemoButton"),
-  applyButton: document.getElementById("applyButton"),
+  suggestButton: document.getElementById("suggestButton"),
   refreshButton: document.getElementById("refreshButton"),
   videoTitle: document.getElementById("videoTitle"),
   videoMeta: document.getElementById("videoMeta"),
   siteLabel: document.getElementById("siteLabel"),
   statusDot: document.getElementById("statusDot"),
   lastActionTitle: document.getElementById("lastActionTitle"),
-  lastActionText: document.getElementById("lastActionText")
+  lastActionText: document.getElementById("lastActionText"),
+  suggestionDialog: document.getElementById("suggestionDialog"),
+  suggestionForm: document.getElementById("suggestionForm"),
+  closeSuggestionButton: document.getElementById("closeSuggestionButton"),
+  cancelSuggestionButton: document.getElementById("cancelSuggestionButton"),
+  suggestStartInput: document.getElementById("suggestStartInput"),
+  suggestEndInput: document.getElementById("suggestEndInput"),
+  suggestCategorySelect: document.getElementById("suggestCategorySelect"),
+  suggestRatingSelect: document.getElementById("suggestRatingSelect"),
+  suggestActionSelect: document.getElementById("suggestActionSelect"),
+  suggestNoteInput: document.getElementById("suggestNoteInput")
 };
 
 let settings = structuredClone(DEFAULT_SETTINGS);
@@ -82,6 +93,14 @@ function renderStaticControls() {
       <svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[category.icon]}</svg>
       <span>${category.label}</span>
     </button>`
+  )).join("");
+
+  els.suggestCategorySelect.innerHTML = CATEGORIES.map((category) => (
+    `<option value="${category.id}">${category.label}</option>`
+  )).join("");
+
+  els.suggestRatingSelect.innerHTML = RATINGS.map((rating) => (
+    `<option value="${rating}">${rating}</option>`
   )).join("");
 }
 
@@ -122,12 +141,8 @@ function bindEvents() {
     await saveAndBroadcast();
   });
 
-  els.applyButton.addEventListener("click", async () => {
-    await saveAndBroadcast();
-    els.applyButton.textContent = "Applied";
-    window.setTimeout(() => {
-      els.applyButton.textContent = "Apply settings";
-    }, 900);
+  els.suggestButton.addEventListener("click", () => {
+    openSuggestionDialog();
   });
 
   els.refreshButton.addEventListener("click", async () => {
@@ -137,6 +152,14 @@ function bindEvents() {
 
   els.openDemoButton.addEventListener("click", () => {
     extensionApi.tabs.create({ url: DEMO_URL });
+  });
+
+  els.closeSuggestionButton.addEventListener("click", closeSuggestionDialog);
+  els.cancelSuggestionButton.addEventListener("click", closeSuggestionDialog);
+
+  els.suggestionForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    await savePendingSubmission();
   });
 }
 
@@ -153,7 +176,8 @@ function mergeSettings(stored) {
       ...(stored.enabledCategories || {})
     },
     siteEnabled: stored.siteEnabled || {},
-    pausedVideos: stored.pausedVideos || {}
+    pausedVideos: stored.pausedVideos || {},
+    pendingSubmissions: Array.isArray(stored.pendingSubmissions) ? stored.pendingSubmissions : []
   };
 }
 
@@ -256,6 +280,63 @@ function renderStatus(siteEnabled, videoPaused) {
   }
 }
 
+function openSuggestionDialog() {
+  const currentTime = Number(tabStatus?.currentTime || 29.5);
+  const start = Math.max(0, Math.round(currentTime * 10) / 10);
+  const end = Math.round((start + 1) * 10) / 10;
+
+  els.suggestStartInput.value = String(start);
+  els.suggestEndInput.value = String(end);
+  els.suggestCategorySelect.value = "profanity";
+  els.suggestRatingSelect.value = settings.selectedRating || "PG";
+  els.suggestActionSelect.value = "mute";
+  els.suggestNoteInput.value = "";
+
+  if (typeof els.suggestionDialog.showModal === "function") {
+    els.suggestionDialog.showModal();
+  } else {
+    els.suggestionDialog.setAttribute("open", "");
+  }
+}
+
+function closeSuggestionDialog() {
+  if (typeof els.suggestionDialog.close === "function") {
+    els.suggestionDialog.close();
+  } else {
+    els.suggestionDialog.removeAttribute("open");
+  }
+}
+
+async function savePendingSubmission() {
+  const start = Number(els.suggestStartInput.value);
+  const end = Number(els.suggestEndInput.value);
+
+  if (!Number.isFinite(start) || !Number.isFinite(end) || end <= start) {
+    els.lastActionTitle.textContent = "Fix timestamp range";
+    els.lastActionText.textContent = "End time must be after start time.";
+    return;
+  }
+
+  const submission = {
+    id: `local-${Date.now()}`,
+    videoUrl: currentVideoKey || normalizeVideoUrl(activeTab?.url || "") || activeTab?.url || DEMO_URL,
+    start,
+    end,
+    rating: els.suggestRatingSelect.value,
+    categories: [els.suggestCategorySelect.value],
+    action: els.suggestActionSelect.value,
+    note: els.suggestNoteInput.value.trim(),
+    status: "pending-editor-review",
+    submittedAt: new Date().toISOString()
+  };
+
+  settings.pendingSubmissions = [submission, ...(settings.pendingSubmissions || [])].slice(0, 12);
+  await saveAndBroadcast();
+  closeSuggestionDialog();
+  els.lastActionTitle.textContent = "Timestamp saved";
+  els.lastActionText.textContent = `${formatTime(start)}-${formatTime(end)} is pending editor review.`;
+}
+
 function safeUrl(rawUrl) {
   try {
     return new URL(rawUrl);
@@ -287,6 +368,15 @@ function inferTitleFromUrl(rawUrl) {
   if (!url) return "";
   if (url.hostname.includes("youtube.com")) return "YouTube video";
   return url.hostname;
+}
+
+function formatTime(totalSeconds) {
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds - minutes * 60;
+  const formattedSeconds = seconds % 1 === 0
+    ? String(seconds).padStart(2, "0")
+    : seconds.toFixed(1).padStart(4, "0");
+  return `${minutes}:${formattedSeconds}`;
 }
 
 function getExtensionApi() {
