@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "Ratings Adjuster",
+  "description": "Mute or skip approved timestamp ranges based on your selected rating and content categories.",
+  "version": "0.1.0",
+  "permissions": ["storage", "tabs"],
+  "host_permissions": ["<all_urls>"],
+  "action": {
+    "default_title": "Ratings Adjuster",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["data/curatedSegments.json"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

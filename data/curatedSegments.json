@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-06-27T17:00:00Z",
+  "syncMode": "local-demo",
+  "editorialPolicy": {
+    "status": "prepared-for-backend",
+    "description": "MVP data is bundled locally. The schema separates community submissions from editor-approved segments so the same shape can later sync from an API."
+  },
+  "videos": {
+    "https://www.youtube.com/watch?v=0NbemFbr7Jw": {
+      "title": "Ratings Adjuster YouTube demo",
+      "url": "https://www.youtube.com/watch?v=0NbemFbr7Jw",
+      "provider": "youtube",
+      "editorStatus": "approved",
+      "source": {
+        "type": "editor-approved",
+        "submittedBy": "demo-community",
+        "approvedBy": "ratings-adjuster-editor",
+        "approvedAt": "2026-06-27T17:00:00Z"
+      },
+      "segments": [
+        {
+          "id": "yt-demo-profanity-001",
+          "start": 29.5,
+          "end": 30.5,
+          "rating": "PG",
+          "categories": ["profanity"],
+          "action": "mute",
+          "reason": "Sample community timestamp for mild profanity."
+        },
+        {
+          "id": "yt-demo-violence-001",
+          "start": 18,
+          "end": 25,
+          "rating": "PG-13",
+          "categories": ["violence"],
+          "action": "skip",
+          "reason": "Sample editor-approved visual violence beat."
+        },
+        {
+          "id": "yt-demo-sexual-001",
+          "start": 34,
+          "end": 42,
+          "rating": "R",
+          "categories": ["sexual-references", "nudity"],
+          "action": "skip",
+          "reason": "Sample timestamp for mature visual content."
+        },
+        {
+          "id": "yt-demo-substances-001",
+          "start": 54,
+          "end": 63,
+          "rating": "PG-13",
+          "categories": ["drugs", "alcohol"],
+          "action": "mute",
+          "reason": "Sample dialogue reference to substances."
+        },
+        {
+          "id": "yt-demo-gore-001",
+          "start": 78,
+          "end": 86,
+          "rating": "NC-17",
+          "categories": ["gore", "jump-scares"],
+          "action": "skip",
+          "reason": "Sample high-intensity sequence."
+        }
+      ]
+    }
+  },
+  "communitySubmissions": [
+    {
+      "id": "pending-demo-001",
+      "videoUrl": "https://www.youtube.com/watch?v=0NbemFbr7Jw",
+      "start": 96,
+      "end": 101,
+      "rating": "PG-13",
+      "categories": ["religious-content"],
+      "action": "mute",
+      "status": "pending-editor-review",
+      "submittedAt": "2026-06-27T17:00:00Z"
+    }
+  ]
+}

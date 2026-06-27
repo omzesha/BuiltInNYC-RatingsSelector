@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ratings Adjuster</title>
+    <link rel="stylesheet" href="popup.css">
+  </head>
+  <body>
+    <main class="popup-shell">
+      <header class="app-header">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" role="img">
+            <path d="M12 2.8 19.2 5.6v5.8c0 4.4-2.8 8.2-7.2 9.8-4.4-1.6-7.2-5.4-7.2-9.8V5.6L12 2.8Z"></path>
+            <path d="m8.9 12.1 2 2 4.4-5"></path>
+          </svg>
+        </div>
+        <div>
+          <h1>Ratings Adjuster</h1>
+          <p id="syncLabel">Local demo database</p>
+        </div>
+        <button class="icon-button" id="refreshButton" type="button" title="Refresh current tab">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20 11a8.1 8.1 0 0 0-14.1-4.7L4 8.2"></path>
+            <path d="M4 4v4.2h4.2"></path>
+            <path d="M4 13a8.1 8.1 0 0 0 14.1 4.7L20 15.8"></path>
+            <path d="M20 20v-4.2h-4.2"></path>
+          </svg>
+        </button>
+      </header>
+
+      <section class="status-panel" aria-live="polite">
+        <div>
+          <p class="eyebrow">Current video</p>
+          <h2 id="videoTitle">Looking for a video player</h2>
+          <p id="videoMeta">Open the demo YouTube video to start filtering.</p>
+        </div>
+        <div class="status-dot" id="statusDot" aria-hidden="true"></div>
+      </section>
+
+      <section class="control-section">
+        <div class="section-row">
+          <div>
+            <h3>Rating ceiling</h3>
+            <p>Anything above this level is filtered.</p>
+          </div>
+          <strong id="selectedRatingLabel">G</strong>
+        </div>
+        <div class="rating-grid" id="ratingGrid" role="radiogroup" aria-label="Rating ceiling"></div>
+      </section>
+
+      <section class="control-section">
+        <div class="section-row">
+          <div>
+            <h3>Filtered categories</h3>
+            <p>Toggle what should trigger mute or skip.</p>
+          </div>
+          <button class="text-button" id="allCategoriesButton" type="button">All on</button>
+        </div>
+        <div class="category-grid" id="categoryGrid"></div>
+      </section>
+
+      <section class="switch-panel">
+        <label class="switch-row">
+          <span>
+            <strong>Filtering on this site</strong>
+            <small id="siteLabel">Current website</small>
+          </span>
+          <input id="siteEnabledToggle" type="checkbox" checked>
+        </label>
+        <button class="pause-button" id="pauseVideoButton" type="button">Pause for this video</button>
+      </section>
+
+      <section class="last-action" id="lastActionPanel">
+        <div class="pulse-icon" aria-hidden="true"></div>
+        <div>
+          <strong id="lastActionTitle">Ready for demo</strong>
+          <p id="lastActionText">Seek to 0:29.5, 0:18, or 0:34 in the sample video.</p>
+        </div>
+      </section>
+
+      <footer class="footer-actions">
+        <button class="secondary-button" id="openDemoButton" type="button">Open demo video</button>
+        <button class="primary-button" id="applyButton" type="button">Apply settings</button>
+      </footer>
+    </main>
+    <script src="popup.js"></script>
+  </body>
+</html>
